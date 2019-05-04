@@ -1,0 +1,20 @@
+anatomy-playbook:
+  use-features:
+    PROJECT:
+      name: nix
+      code_namespace: nexxera
+      code_name: nix
+      description: .
+    APP_SANIC: {}
+    SRV: {}
+    DEPENDENCIES:
+      python:
+        - aiomysql
+        - schematics
+        - sanic_envconfig
+        - sqlalchemy
+        # Development
+        - zops.requirements-directory
+        - zops.anatomy
+        - pytest
+        - pylama
