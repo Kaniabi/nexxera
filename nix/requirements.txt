@@ -7,3 +7,4 @@ schematics
 pytest
 pylama
 tavern[pytest]
+pytest-flask

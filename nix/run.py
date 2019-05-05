@@ -1,10 +1,4 @@
-import connexion
+from nexxera.nix.app import create_app
 
-
-app = connexion.App(
-    __name__,
-    specification_dir='openapi',
-    arguments={}
-)
-app.add_api('nix.yaml', arguments={})
+app = create_app()
 app.run(port=9009, debug=True)

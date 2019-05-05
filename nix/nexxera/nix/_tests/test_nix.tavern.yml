@@ -1,31 +1,35 @@
 ---
+marks:
+  - usefixtures:
+    - flask_live_url
+
 test_name: Testing nix API
 
 stages:
   - name: Smoke test for ping
     request:
-      url: http://localhost:9009/ping
+      url: '{flask_live_url}/ping'
       method: GET
     response:
       status_code: 200
 
   - name: Delete all users.
     request:
-      url: http://localhost:9009/users/
+      url: '{flask_live_url}/users/'
       method: DELETE
     response:
       status_code: 200
 
   - name: List all users (empty).
     request:
-      url: http://localhost:9009/users/
+      url: '{flask_live_url}/users/'
       method: GET
     response:
       status_code: 200
 
   - name: Create an user.
     request:
-      url: http://localhost:9009/users/
+      url: '{flask_live_url}/users/'
       method: POST
       headers:
           content-type: application/json
@@ -41,7 +45,7 @@ stages:
 
   - name: List all users (one).
     request:
-      url: http://localhost:9009/users/
+      url: '{flask_live_url}/users/'
       method: GET
     response:
       status_code: 200
@@ -52,14 +56,14 @@ stages:
 
   - name: Delete all transactions.
     request:
-      url: http://localhost:9009/transactions/
+      url: '{flask_live_url}/transactions/'
       method: DELETE
     response:
       status_code: 200
 
   - name: Create the first transaction.
     request:
-      url: http://localhost:9009/transactions/
+      url: '{flask_live_url}/transactions/'
       method: POST
       headers:
           content-type: application/json
@@ -73,10 +77,9 @@ stages:
           usuario_id: 1
           valor: 100.00
 
-
   - name: Create the second transaction.
     request:
-      url: http://localhost:9009/transactions/
+      url: '{flask_live_url}/transactions/'
       method: POST
       headers:
           content-type: application/json
@@ -92,7 +95,7 @@ stages:
 
   - name: Lists the (two) transactions.
     request:
-      url: http://localhost:9009/transactions/
+      url: '{flask_live_url}/transactions/'
     response:
       status_code: 200
       body:
@@ -105,7 +108,7 @@ stages:
 
   - name: Delete the second transaction.
     request:
-        url: http://localhost:9009/transactions/2/
+        url: '{flask_live_url}/transactions/2/'
         method: DELETE
     response:
         status_code: 200
@@ -113,7 +116,7 @@ stages:
 
   - name: Lists the (remaining) transactions.
     request:
-      url: http://localhost:9009/transactions/
+      url: '{flask_live_url}/transactions/'
     response:
       status_code: 200
       body:
