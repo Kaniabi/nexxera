@@ -1,5 +1,4 @@
 import click
-from zerotk.zops import Console
 
 
 @click.group('nix')

@@ -62,6 +62,12 @@ paths:
                 $ref: '#/components/schemas/UserCreate'
 
   /transactions/:
+    delete:
+      operationId: 'nexxera.nix.api.delete_transactions'
+      summary: 'Deletes all transactions.'
+      responses:
+        200:
+          description: 'Successful'
     get:
       operationId: 'nexxera.nix.api.get_transactions'
       summary: 'Returns the transactions optionally filtering them.'
@@ -81,6 +87,18 @@ paths:
                 $ref: '#/components/schemas/TransactionCreate'
 
   /transactions/{tid}/:
+    delete:
+      operationId: 'nexxera.nix.api.delete_transaction'
+      summary: 'Delete a transaction'
+      parameters:
+        - name: tid
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        200:
+          description: Successful response
     get:
       operationId: 'nexxera.nix.api.get_transaction'
       summary: 'Returns the transactions optionally filtering them.'
@@ -93,15 +111,6 @@ paths:
       responses:
         200:
           description: Successful response
-
-#    delete:
-#      operationId: 'nexxera.nix.api.delete_transaction'
-#      summary: 'Deletes a transaction.'
-#      parameters:
-#        - name: tid
-#          in: path
-#          type: int
-#          required: true
 
 components:
   schemas:

@@ -1,0 +1,122 @@
+---
+test_name: Testing nix API
+
+stages:
+  - name: Smoke test for ping
+    request:
+      url: http://localhost:9009/ping
+      method: GET
+    response:
+      status_code: 200
+
+  - name: Delete all users.
+    request:
+      url: http://localhost:9009/users/
+      method: DELETE
+    response:
+      status_code: 200
+
+  - name: List all users (empty).
+    request:
+      url: http://localhost:9009/users/
+      method: GET
+    response:
+      status_code: 200
+
+  - name: Create an user.
+    request:
+      url: http://localhost:9009/users/
+      method: POST
+      headers:
+          content-type: application/json
+      json:
+        name: "Alpha"
+        cnpj: "11111111111111"
+    response:
+      status_code: 201
+      body:
+        id: 1
+        nome: "Alpha"
+        cnpj: "11111111111111"
+
+  - name: List all users (one).
+    request:
+      url: http://localhost:9009/users/
+      method: GET
+    response:
+      status_code: 200
+      body:
+        - id: 1
+          nome: "Alpha"
+          cnpj: "11111111111111"
+
+  - name: Delete all transactions.
+    request:
+      url: http://localhost:9009/transactions/
+      method: DELETE
+    response:
+      status_code: 200
+
+  - name: Create the first transaction.
+    request:
+      url: http://localhost:9009/transactions/
+      method: POST
+      headers:
+          content-type: application/json
+      json:
+          user_id: 1
+          amount: 100.00
+    response:
+      status_code: 201
+      body:
+          id: 1
+          usuario_id: 1
+          valor: 100.00
+
+
+  - name: Create the second transaction.
+    request:
+      url: http://localhost:9009/transactions/
+      method: POST
+      headers:
+          content-type: application/json
+      json:
+          user_id: 1
+          amount: 10.00
+    response:
+      status_code: 201
+      body:
+          id: 2
+          usuario_id: 1
+          valor: 10.00
+
+  - name: Lists the (two) transactions.
+    request:
+      url: http://localhost:9009/transactions/
+    response:
+      status_code: 200
+      body:
+        - id: 1
+          usuario_id: 1
+          valor: 100.00
+        - id: 2
+          usuario_id: 1
+          valor: 10.00
+
+  - name: Delete the second transaction.
+    request:
+        url: http://localhost:9009/transactions/2/
+        method: DELETE
+    response:
+        status_code: 200
+        body: {}
+
+  - name: Lists the (remaining) transactions.
+    request:
+      url: http://localhost:9009/transactions/
+    response:
+      status_code: 200
+      body:
+        - id: 1
+          usuario_id: 1
+          valor: 100.00

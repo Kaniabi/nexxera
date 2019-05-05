@@ -8,9 +8,11 @@ verify_ssl = true
 [packages]
 connexion = {extras = ["swagger-ui"],version = "*"}
 flask-sqlalchemy = "*"
-pyresttest = "*"
 pycurl = "*"
-zerotk-zops = "==0.5.3"
+zerotk-zops = "*"
+pylama = "*"
+pytest = "*"
+tavern = {extras = ["pytest"],version = "*"}
 
 [requires]
 python_version = "3.7"

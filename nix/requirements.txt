@@ -4,4 +4,6 @@ zerotk.zops
 schematics
 
 # Development
-pyresttest
+pytest
+pylama
+tavern[pytest]
