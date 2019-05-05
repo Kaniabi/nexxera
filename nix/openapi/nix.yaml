@@ -11,15 +11,55 @@ paths:
       summary: 'Ping'
       responses:
         200:
-          description: Successful
+          description: 'Successful'
 
   /users/:
+    delete:
+      operationId: 'nexxera.nix.api.delete_users'
+      summary: 'Deletes all users.'
+      responses:
+        200:
+          description: 'Successful'
     get:
       operationId: 'nexxera.nix.api.get_users'
       summary: 'Returns the users optionally filtering them.'
       responses:
         200:
-          description: Successful
+          description: 'Successful'
+    post:
+      operationId: 'nexxera.nix.api.post_users'
+      summary: 'Creates a new user.'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UserCreate'
+      responses:
+        201:
+          description: 'Created'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserCreate'
+
+  /users/{uid}/:
+    get:
+      operationId: 'nexxera.nix.api.get_user'
+      summary: 'Returns a specific user.'
+      parameters:
+        - name: uid
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        200:
+          description: 'Successful'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserCreate'
 
   /transactions/:
     get:
@@ -27,17 +67,11 @@ paths:
       summary: 'Returns the transactions optionally filtering them.'
       responses:
         200:
-          description: Successful
+          description: 'Successful'
 
     post:
       operationId: 'nexxera.nix.api.post_transaction'
       summary: 'Creates a new transaction.'
-      parameters:
-        - in: body
-          name: body
-          required: true
-          schema:
-            $ref: '#/components/schemas/TransactionCreate'
       responses:
         201:
           description: Created
@@ -46,18 +80,19 @@ paths:
               schema:
                 $ref: '#/components/schemas/TransactionCreate'
 
-#  /transactions/{tid}:
-#    get:
-#      operationId: 'nexxera.nix.api.get_transaction'
-#      summary: 'Returns the transactions optionally filtering them.'
-#      parameters:
-#        - name: tid
-#          in: path
-#          type: string
-#          required: true
-#      responses:
-#        200:
-#          description: Successful response
+  /transactions/{tid}/:
+    get:
+      operationId: 'nexxera.nix.api.get_transaction'
+      summary: 'Returns the transactions optionally filtering them.'
+      parameters:
+        - name: tid
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        200:
+          description: Successful response
 
 #    delete:
 #      operationId: 'nexxera.nix.api.delete_transaction'
@@ -70,6 +105,14 @@ paths:
 
 components:
   schemas:
+    UserCreate:
+      type: object
+      properties:
+        name:
+          type: string
+        cnpj:
+          type: string
+
     TransactionCreate:
       type: object
       properties:

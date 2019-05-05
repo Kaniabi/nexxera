@@ -1,0 +1,7 @@
+connexion[swagger-ui]
+flask-sqlalchemy
+zerotk.zops
+schematics
+
+# Development
+pyresttest

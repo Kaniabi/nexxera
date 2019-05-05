@@ -30,6 +30,7 @@ setup_kwargs['dependency_links'] = []
 setup_kwargs['setup_requires'] = ['setuptools_scm']
 setup_kwargs['tests_require'] = []
 
+# Zops commands
 setup_kwargs['entry_points'] = """
 [zops.plugins]
 nix=nexxera.nix.zops:main
