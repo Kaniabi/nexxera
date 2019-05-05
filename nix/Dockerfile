@@ -3,7 +3,8 @@
 FROM kaniabi/pythonbase:latest
 
 RUN \
-  apt-get install -y --no-install-recommends build-essential && \
+  apt-get update  && \
+  apt-get install -y --no-install-recommends build-essential
   
 # APP REQUIREMENTS: python
 #   NOTE: Separate requirements from the project code itself to optimize docker creation for optimization.
