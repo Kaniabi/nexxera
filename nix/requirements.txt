@@ -1,7 +1,7 @@
-connexion[swagger-ui]
 flask-sqlalchemy
+flask-restless
+
 zerotk.zops
-schematics
 
 # Development
 pytest

@@ -10,5 +10,9 @@ def _flask_live_url(live_server):
 def app():
     from nexxera.nix.app import create_app
 
-    # TODO: The connexion application (returned by create_app()) is alive by coincidence.
-    return create_app().app
+    config_updates = {
+        "FLASK_TEST": True,
+        "SQLALCHEMY_DATABASE_URI": "sqlite:///:memory:"
+    }
+
+    return create_app("test_nix", config_updates)

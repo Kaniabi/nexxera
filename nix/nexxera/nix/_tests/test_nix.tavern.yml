@@ -6,30 +6,30 @@ marks:
 test_name: Testing nix API
 
 stages:
-  - name: Smoke test for ping
-    request:
-      url: '{flask_live_url}/ping'
-      method: GET
-    response:
-      status_code: 200
+#  - name: Smoke test for ping
+#    request:
+#      url: '{flask_live_url}/ping'
+#      method: GET
+#    response:
+#      status_code: 200
 
-  - name: Delete all users.
-    request:
-      url: '{flask_live_url}/users/'
-      method: DELETE
-    response:
-      status_code: 200
+  # Testing users
 
   - name: List all users (empty).
     request:
-      url: '{flask_live_url}/users/'
+      url: '{flask_live_url}/api/users'
       method: GET
     response:
       status_code: 200
+      body:
+        num_results: 0
+        objects: []
+        page: 1
+        total_pages: 0
 
   - name: Create an user.
     request:
-      url: '{flask_live_url}/users/'
+      url: '{flask_live_url}/api/users'
       method: POST
       headers:
           content-type: application/json
@@ -40,86 +40,130 @@ stages:
       status_code: 201
       body:
         id: 1
-        nome: "Alpha"
+        name: "Alpha"
         cnpj: "11111111111111"
 
   - name: List all users (one).
     request:
-      url: '{flask_live_url}/users/'
+      url: '{flask_live_url}/api/users'
       method: GET
     response:
       status_code: 200
       body:
-        - id: 1
-          nome: "Alpha"
-          cnpj: "11111111111111"
+        num_results: 1
+        objects:
+          - id: 1
+            name: "Alpha"
+            cnpj: "11111111111111"
+        page: 1
+        total_pages: 1
 
-  - name: Delete all transactions.
+  - name: Get one specific user.
     request:
-      url: '{flask_live_url}/transactions/'
-      method: DELETE
+      url: '{flask_live_url}/api/users/1'
     response:
       status_code: 200
+      body:
+          id: 1
+          name: "Alpha"
+          cnpj: "11111111111111"
+
+  # Testing transactions
+
+  - name: List all transactions (zero).
+    request:
+      url: '{flask_live_url}/api/transactions'
+      method: GET
+    response:
+      status_code: 200
+      body:
+        num_results: 0
+        objects: []
+        page: 1
+        total_pages: 0
 
   - name: Create the first transaction.
     request:
-      url: '{flask_live_url}/transactions/'
+      url: '{flask_live_url}/api/transactions'
       method: POST
       headers:
           content-type: application/json
       json:
           user_id: 1
           amount: 100.00
+          type: 'CC'
     response:
       status_code: 201
       body:
           id: 1
-          usuario_id: 1
-          valor: 100.00
+          user_id: 1
+          amount: 100.00
+          type: 'CC'
 
   - name: Create the second transaction.
     request:
-      url: '{flask_live_url}/transactions/'
+      url: '{flask_live_url}/api/transactions'
       method: POST
       headers:
           content-type: application/json
       json:
           user_id: 1
           amount: 10.00
+          type: 'CC'
     response:
       status_code: 201
       body:
           id: 2
-          usuario_id: 1
-          valor: 10.00
+          user_id: 1
+          amount: 10.00
+          type: 'CC'
 
-  - name: Lists the (two) transactions.
+  - name: Get one specific transaction.
     request:
-      url: '{flask_live_url}/transactions/'
+      url: '{flask_live_url}/api/transactions/2'
     response:
       status_code: 200
       body:
-        - id: 1
-          usuario_id: 1
-          valor: 100.00
-        - id: 2
-          usuario_id: 1
-          valor: 10.00
+          id: 2
+          user_id: 1
+          amount: 10.00
+          type: 'CC'
+
+  - name: Lists the transactions (two).
+    request:
+      url: '{flask_live_url}/api/transactions'
+    response:
+      status_code: 200
+      body:
+        num_results: 2
+        objects:
+          - id: 1
+            user_id: 1
+            amount: 100.00
+          - id: 2
+            user_id: 1
+            amount: 10.00
+        page: 1
+        total_pages: 1
 
   - name: Delete the second transaction.
     request:
-        url: '{flask_live_url}/transactions/2/'
+        url: '{flask_live_url}/api/transactions/2'
         method: DELETE
     response:
-        status_code: 200
+        status_code: 204
         body: {}
 
-  - name: Lists the (remaining) transactions.
+  - name: Lists the transactions (one).
     request:
-      url: '{flask_live_url}/transactions/'
+      url: '{flask_live_url}/api/transactions'
     response:
       status_code: 200
       body:
-        - id: 1
-          usuario_id: 1
-          valor: 100.00
+        num_results: 1
+        objects:
+          - id: 1
+            user_id: 1
+            amount: 100.00
+        page: 1
+        total_pages: 1
