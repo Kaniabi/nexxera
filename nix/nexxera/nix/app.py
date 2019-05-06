@@ -22,9 +22,14 @@ def create_app(name, config_updates=None):
     manager.create_api(
         result.models.NixTransaction,
         methods=["GET", "POST", "DELETE"],
-        validation_exceptions=[ValidationError],
+        validation_exceptions=[
+            ValidationError
+        ],
+        preprocessors={
+            "POST": [result.models.NixTransaction.post_preprocessor],
+        },
         postprocessors={
-            "GET_MANY": [result.models.NixTransaction.get_many_postprocessor]
+            "GET_MANY": [result.models.NixTransaction.get_many_postprocessor],
         },
     )
 

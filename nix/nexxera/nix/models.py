@@ -1,3 +1,5 @@
+from datetime import time
+
 from flask_sqlalchemy import BaseQuery
 
 
@@ -65,6 +67,9 @@ def create_models(db):
 
         # The maximum amount accepted by a transaction.
         MAX_AMOUNT = 100000.00
+        TED_MIN_AMOUNT = 5000.00
+        TED_START_TIME = time(10)
+        TED_END_TIME = time(16)
 
         id = db.Column(db.Integer, primary_key=True)
         user_id = db.Column(db.Integer, db.ForeignKey("users.id"), nullable=False)
@@ -101,6 +106,23 @@ def create_models(db):
             if value > self.MAX_AMOUNT:
                 self.status = "ERRO"
             return value
+
+        @classmethod
+        def post_preprocessor(cls, data=None, **kw):
+            """
+            Automatically calculates the type attribute.
+            """
+            from datetime import datetime
+
+            # TODO: Implement the correct timestamp, including the possibility to receiving it by paramter (for testing)
+            timestamp = datetime(2019, 5, 6, 19, 0, 0)
+
+            data['type'] = 'DOC'
+            if data['debtor_bank'] == data['creditor_bank']:
+                data['type'] = 'CC'
+            elif data['amount'] < cls.TED_MIN_AMOUNT and cls.TED_START_TIME < timestamp.time() < cls.TED_END_TIME:
+                data['type'] = 'TED'
+            return data
 
         @classmethod
         def get_many_postprocessor(cls, result=None, search_params=None, **kw):

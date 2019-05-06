@@ -93,7 +93,7 @@ stages:
           debtor_agency: BAgency
           debtor_account: '002'
           amount: 100.00
-          type: 'CC'
+          type: 'IGNORED'
     response:
       status_code: 201
       body:
@@ -108,7 +108,7 @@ stages:
           debtor_agency: BAgency
           debtor_account: '002'
           amount: 100.00
-          type: 'CC'
+          type: 'DOC'
 
   - name: Create the second transaction.
     request:
@@ -127,7 +127,7 @@ stages:
           debtor_agency: BAgency
           debtor_account: '002'
           amount: 10.00
-          type: 'CC'
+          type: 'IGNORED'
     response:
       status_code: 201
       body:
@@ -142,7 +142,7 @@ stages:
           debtor_agency: BAgency
           debtor_account: '002'
           amount: 10.00
-          type: 'CC'
+          type: 'DOC'
 
   - name: Get one specific transaction.
     request:
@@ -161,7 +161,7 @@ stages:
           debtor_agency: BAgency
           debtor_account: '002'
           amount: 10.00
-          type: 'CC'
+          type: 'DOC'
 
   - name: Lists the transactions (two).
     request:
@@ -182,7 +182,7 @@ stages:
             debtor_agency: BAgency
             debtor_account: '002'
             amount: 100.00
-            type: 'CC'
+            type: 'DOC'
           - id: 2
             user_id: 1
             creditor_name: Charlie
@@ -194,7 +194,7 @@ stages:
             debtor_agency: BAgency
             debtor_account: '002'
             amount: 10.00
-            type: 'CC'
+            type: 'DOC'
         page: 1
         total_pages: 1
         total_amount: 110.00
@@ -232,7 +232,7 @@ stages:
             debtor_agency: BAgency
             debtor_account: '002'
             amount: 100.00
-            type: 'CC'
+            type: 'DOC'
         page: 1
         total_pages: 1
         total_amount: 100.00
@@ -254,7 +254,7 @@ stages:
           debtor_agency: BAgency
           debtor_account: '002'
           amount: 100000.99
-          type: 'CC'
+          type: 'IGNORED'
     response:
       status_code: 201
       body:
@@ -270,7 +270,7 @@ stages:
           debtor_agency: BAgency
           debtor_account: '002'
           amount: 100000.99
-          type: 'CC'
+          type: 'DOC'
           status: 'ERRO'
 
   - name: Creates one more transaction.
@@ -284,13 +284,13 @@ stages:
           creditor_name: Echo
           creditor_bank: EBank
           creditor_agency: EAgency
-          creditor_account: '004'
+          creditor_account: '005'
           debtor_name: Alpha
           debtor_bank: ABank
           debtor_agency: AAgency
           debtor_account: '001'
           amount: 1.00
-          type: 'CC'
+          type: 'IGNORED'
     response:
       status_code: 201
       body:
@@ -299,22 +299,57 @@ stages:
           creditor_name: Echo
           creditor_bank: EBank
           creditor_agency: EAgency
-          creditor_account: '004'
+          creditor_account: '005'
           debtor_name: Alpha
           debtor_bank: ABank
           debtor_agency: AAgency
           debtor_account: '001'
           amount: 1.00
+          type: 'DOC'
+          status: 'OK'
+
+  - name: Creates a CC transaction.
+    request:
+      url: '{flask_live_url}/api/transactions'
+      method: POST
+      headers:
+          content-type: application/json
+      json:
+          user_id: 1
+          creditor_name: Foxtrot
+          creditor_bank: ABank
+          creditor_agency: AAgency
+          creditor_account: '006'
+          debtor_name: Alpha
+          debtor_bank: ABank
+          debtor_agency: AAgency
+          debtor_account: '001'
+          amount: 10000.00
+          type: 'IGNORED'
+    response:
+      status_code: 201
+      body:
+          id: 4
+          user_id: 1
+          creditor_name: Foxtrot
+          creditor_bank: ABank
+          creditor_agency: AAgency
+          creditor_account: '006'
+          debtor_name: Alpha
+          debtor_bank: ABank
+          debtor_agency: AAgency
+          debtor_account: '001'
+          amount: 10000.00
           type: 'CC'
           status: 'OK'
 
-  - name: Lists the transactions (three).
+  - name: Lists the transactions (four).
     request:
       url: '{flask_live_url}/api/transactions'
     response:
       status_code: 200
       body:
-        num_results: 3
+        num_results: 4
         objects:
           - id: 1
             user_id: 1
@@ -327,7 +362,7 @@ stages:
             debtor_agency: BAgency
             debtor_account: '002'
             amount: 100.00
-            type: 'CC'
+            type: 'DOC'
             status: 'OK'
           - id: 2
             user_id: 1
@@ -340,24 +375,37 @@ stages:
             debtor_agency: BAgency
             debtor_account: '002'
             amount: 100000.99
-            type: 'CC'
+            type: 'DOC'
             status: 'ERRO'
           - id: 3
             user_id: 1
             creditor_name: Echo
             creditor_bank: EBank
             creditor_agency: EAgency
-            creditor_account: '004'
+            creditor_account: '005'
             debtor_name: Alpha
             debtor_bank: ABank
             debtor_agency: AAgency
             debtor_account: '001'
             amount: 1.00
+            type: 'DOC'
+            status: 'OK'
+          - id: 4
+            user_id: 1
+            creditor_name: Foxtrot
+            creditor_bank: ABank
+            creditor_agency: AAgency
+            creditor_account: '006'
+            debtor_name: Alpha
+            debtor_bank: ABank
+            debtor_agency: AAgency
+            debtor_account: '001'
+            amount: 10000.00
             type: 'CC'
             status: 'OK'
         page: 1
         total_pages: 1
-        total_amount: 100101.99
+        total_amount: 110101.99
 
   - name: Lists the transactions (filtered by creditor).
     request:
@@ -380,7 +428,7 @@ stages:
             debtor_agency: BAgency
             debtor_account: '002'
             amount: 100.00
-            type: 'CC'
+            type: 'DOC'
             status: 'OK'
         page: 1
         total_pages: 1
@@ -394,21 +442,34 @@ stages:
     response:
       status_code: 200
       body:
-        num_results: 1
+        num_results: 2
         objects:
           - id: 3
             user_id: 1
             creditor_name: Echo
             creditor_bank: EBank
             creditor_agency: EAgency
-            creditor_account: '004'
+            creditor_account: '005'
             debtor_name: Alpha
             debtor_bank: ABank
             debtor_agency: AAgency
             debtor_account: '001'
             amount: 1.00
+            type: 'DOC'
+            status: 'OK'
+          - id: 4
+            user_id: 1
+            creditor_name: Foxtrot
+            creditor_bank: ABank
+            creditor_agency: AAgency
+            creditor_account: '006'
+            debtor_name: Alpha
+            debtor_bank: ABank
+            debtor_agency: AAgency
+            debtor_account: '001'
+            amount: 10000.00
             type: 'CC'
             status: 'OK'
         page: 1
         total_pages: 1
-        total_amount: 1.00
+        total_amount: 10001.00
