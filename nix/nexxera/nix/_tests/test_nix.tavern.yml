@@ -6,12 +6,6 @@ marks:
 test_name: Testing nix API
 
 stages:
-#  - name: Smoke test for ping
-#    request:
-#      url: '{flask_live_url}/ping'
-#      method: GET
-#    response:
-#      status_code: 200
 
   # Testing users
 
@@ -90,6 +84,14 @@ stages:
           content-type: application/json
       json:
           user_id: 1
+          creditor_name: Alpha
+          creditor_bank: ABank
+          creditor_agency: AAgency
+          creditor_account: '001'
+          debtor_name: Bravo
+          debtor_bank: BBank
+          debtor_agency: BAgency
+          debtor_account: '002'
           amount: 100.00
           type: 'CC'
     response:
@@ -97,6 +99,14 @@ stages:
       body:
           id: 1
           user_id: 1
+          creditor_name: Alpha
+          creditor_bank: ABank
+          creditor_agency: AAgency
+          creditor_account: '001'
+          debtor_name: Bravo
+          debtor_bank: BBank
+          debtor_agency: BAgency
+          debtor_account: '002'
           amount: 100.00
           type: 'CC'
 
@@ -108,6 +118,14 @@ stages:
           content-type: application/json
       json:
           user_id: 1
+          creditor_name: Charlie
+          creditor_bank: CBank
+          creditor_agency: CAgency
+          creditor_account: '003'
+          debtor_name: Bravo
+          debtor_bank: BBank
+          debtor_agency: BAgency
+          debtor_account: '002'
           amount: 10.00
           type: 'CC'
     response:
@@ -115,6 +133,14 @@ stages:
       body:
           id: 2
           user_id: 1
+          creditor_name: Charlie
+          creditor_bank: CBank
+          creditor_agency: CAgency
+          creditor_account: '003'
+          debtor_name: Bravo
+          debtor_bank: BBank
+          debtor_agency: BAgency
+          debtor_account: '002'
           amount: 10.00
           type: 'CC'
 
@@ -126,6 +152,14 @@ stages:
       body:
           id: 2
           user_id: 1
+          creditor_name: Charlie
+          creditor_bank: CBank
+          creditor_agency: CAgency
+          creditor_account: '003'
+          debtor_name: Bravo
+          debtor_bank: BBank
+          debtor_agency: BAgency
+          debtor_account: '002'
           amount: 10.00
           type: 'CC'
 
@@ -139,12 +173,31 @@ stages:
         objects:
           - id: 1
             user_id: 1
+            creditor_name: Alpha
+            creditor_bank: ABank
+            creditor_agency: AAgency
+            creditor_account: '001'
+            debtor_name: Bravo
+            debtor_bank: BBank
+            debtor_agency: BAgency
+            debtor_account: '002'
             amount: 100.00
+            type: 'CC'
           - id: 2
             user_id: 1
+            creditor_name: Charlie
+            creditor_bank: CBank
+            creditor_agency: CAgency
+            creditor_account: '003'
+            debtor_name: Bravo
+            debtor_bank: BBank
+            debtor_agency: BAgency
+            debtor_account: '002'
             amount: 10.00
+            type: 'CC'
         page: 1
         total_pages: 1
+        total_amount: 110.00
 
   - name: Delete the second transaction.
     request:
@@ -153,6 +206,12 @@ stages:
     response:
         status_code: 204
         body: {}
+
+  - name: Get one specific transaction (deleted).
+    request:
+      url: '{flask_live_url}/api/transactions/2'
+    response:
+      status_code: 404
 
   - name: Lists the transactions (one).
     request:
@@ -164,6 +223,192 @@ stages:
         objects:
           - id: 1
             user_id: 1
+            creditor_name: Alpha
+            creditor_bank: ABank
+            creditor_agency: AAgency
+            creditor_account: '001'
+            debtor_name: Bravo
+            debtor_bank: BBank
+            debtor_agency: BAgency
+            debtor_account: '002'
             amount: 100.00
+            type: 'CC'
         page: 1
         total_pages: 1
+        total_amount: 100.00
+
+  - name: Creates a transaction with error (max_amount).
+    request:
+      url: '{flask_live_url}/api/transactions'
+      method: POST
+      headers:
+          content-type: application/json
+      json:
+          user_id: 1
+          creditor_name: Delta
+          creditor_bank: DBank
+          creditor_agency: DAgency
+          creditor_account: '004'
+          debtor_name: Bravo
+          debtor_bank: BBank
+          debtor_agency: BAgency
+          debtor_account: '002'
+          amount: 100000.99
+          type: 'CC'
+    response:
+      status_code: 201
+      body:
+          # TODO: This is bad. The deleted transaction id is being reused.
+          id: 2
+          user_id: 1
+          creditor_name: Delta
+          creditor_bank: DBank
+          creditor_agency: DAgency
+          creditor_account: '004'
+          debtor_name: Bravo
+          debtor_bank: BBank
+          debtor_agency: BAgency
+          debtor_account: '002'
+          amount: 100000.99
+          type: 'CC'
+          status: 'ERRO'
+
+  - name: Creates one more transaction.
+    request:
+      url: '{flask_live_url}/api/transactions'
+      method: POST
+      headers:
+          content-type: application/json
+      json:
+          user_id: 1
+          creditor_name: Echo
+          creditor_bank: EBank
+          creditor_agency: EAgency
+          creditor_account: '004'
+          debtor_name: Alpha
+          debtor_bank: ABank
+          debtor_agency: AAgency
+          debtor_account: '001'
+          amount: 1.00
+          type: 'CC'
+    response:
+      status_code: 201
+      body:
+          id: 3
+          user_id: 1
+          creditor_name: Echo
+          creditor_bank: EBank
+          creditor_agency: EAgency
+          creditor_account: '004'
+          debtor_name: Alpha
+          debtor_bank: ABank
+          debtor_agency: AAgency
+          debtor_account: '001'
+          amount: 1.00
+          type: 'CC'
+          status: 'OK'
+
+  - name: Lists the transactions (three).
+    request:
+      url: '{flask_live_url}/api/transactions'
+    response:
+      status_code: 200
+      body:
+        num_results: 3
+        objects:
+          - id: 1
+            user_id: 1
+            creditor_name: Alpha
+            creditor_bank: ABank
+            creditor_agency: AAgency
+            creditor_account: '001'
+            debtor_name: Bravo
+            debtor_bank: BBank
+            debtor_agency: BAgency
+            debtor_account: '002'
+            amount: 100.00
+            type: 'CC'
+            status: 'OK'
+          - id: 2
+            user_id: 1
+            creditor_name: Delta
+            creditor_bank: DBank
+            creditor_agency: DAgency
+            creditor_account: '004'
+            debtor_name: Bravo
+            debtor_bank: BBank
+            debtor_agency: BAgency
+            debtor_account: '002'
+            amount: 100000.99
+            type: 'CC'
+            status: 'ERRO'
+          - id: 3
+            user_id: 1
+            creditor_name: Echo
+            creditor_bank: EBank
+            creditor_agency: EAgency
+            creditor_account: '004'
+            debtor_name: Alpha
+            debtor_bank: ABank
+            debtor_agency: AAgency
+            debtor_account: '001'
+            amount: 1.00
+            type: 'CC'
+            status: 'OK'
+        page: 1
+        total_pages: 1
+        total_amount: 100101.99
+
+  - name: Lists the transactions (filtered by creditor).
+    request:
+      url: '{flask_live_url}/api/transactions'
+      params:
+        q: '{{"filters":[{{"name":"creditor_name", "op":"eq", "val":"Alpha"}}]}}'
+    response:
+      status_code: 200
+      body:
+        num_results: 1
+        objects:
+          - id: 1
+            user_id: 1
+            creditor_name: Alpha
+            creditor_bank: ABank
+            creditor_agency: AAgency
+            creditor_account: '001'
+            debtor_name: Bravo
+            debtor_bank: BBank
+            debtor_agency: BAgency
+            debtor_account: '002'
+            amount: 100.00
+            type: 'CC'
+            status: 'OK'
+        page: 1
+        total_pages: 1
+        total_amount: 100.00
+
+  - name: Lists the transactions (filtered by debtor).
+    request:
+      url: '{flask_live_url}/api/transactions'
+      params:
+        q: '{{"filters":[{{"name":"debtor_name", "op":"eq", "val":"Alpha"}}]}}'
+    response:
+      status_code: 200
+      body:
+        num_results: 1
+        objects:
+          - id: 3
+            user_id: 1
+            creditor_name: Echo
+            creditor_bank: EBank
+            creditor_agency: EAgency
+            creditor_account: '004'
+            debtor_name: Alpha
+            debtor_bank: ABank
+            debtor_agency: AAgency
+            debtor_account: '001'
+            amount: 1.00
+            type: 'CC'
+            status: 'OK'
+        page: 1
+        total_pages: 1
+        total_amount: 1.00
