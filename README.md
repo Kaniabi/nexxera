@@ -15,6 +15,10 @@ Pessoalmente acredito que os testes de alto nível dão mais valor do que
 testes unitários e por isso priorizei eles. Com o devido tempo pode-se
 adicionar testes unitários a medida que eles sejam necessários.
 
+* A maioria das _features_ do sistema foram herdadas do
+  `flask-restless`. Isso facilitou muito a criação de API REST padrão
+  mas dificultou um pouco as customizações das APIs.
+
 
 # Instalação
 
@@ -52,3 +56,34 @@ Os testes de API se encontram no arquivo:
 ```
 $ pytest --cov nexxera --cov-report=term-missing
 ```
+
+
+# Faltas
+
+Infelizmente não consegui implementar alguns dos requisitos a tempo:
+
+* Listagem por data: Na estrutura de dados original não existe um campo
+  de timestamp. Isso deveria ser adicionado para poder fazer essa
+  listagem.
+  Além disso, para poder fazer os testes é necessário poder sobrescrever
+  a data via chamada da API de modo que os testes não dependam da hora
+  atual.
+
+* Não foram feitos testes unitários, apenas um grande teste de API
+  usando o `tavern`. Isso pode ser melhorado tanto adicionando testes
+  unitários onde for interessante bem como organizando melhor os testes
+  de API.
+
+* Documentação da API. Iniciei o projeto usando o `connexion`, que cria
+  a API a partir da documentação do OpenAPI. Essa implementação foi
+  abandonada em favor do `flask-restless`. Com isso ainda existe uma
+  documentação inicial, mas ela não reflete o código.
+  A idéia seria gerar a documentação OpenAPI/Swagger a partir do
+  flask-restless, mas não consegui tempo de testar o pacote que faz
+  isso.
+
+* A implemtação da deleção lógica tem problemas e deveria ser feita com
+  mais cuidado e testes. Dependendo da motivação original podem existir
+  outras soluções possíveis.
+  O problema é que na implementação atual o sistema ignora os IDs dos
+  items deletados usando eles novamente.
