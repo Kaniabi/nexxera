@@ -5,7 +5,7 @@ install_requires = []
 
 setup_kwargs = dict(
     name="nexxera.nix",
-    url="https://github.com/nexxera/nix",
+    url="https://github.com/kaniabi/nexxera-nix",
     description=".",
     long_description=""".""",
     classifiers=[
