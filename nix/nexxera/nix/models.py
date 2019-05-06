@@ -117,11 +117,14 @@ def create_models(db):
             # TODO: Implement the correct timestamp, including the possibility to receiving it by paramter (for testing)
             timestamp = datetime(2019, 5, 6, 19, 0, 0)
 
-            data['type'] = 'DOC'
-            if data['debtor_bank'] == data['creditor_bank']:
-                data['type'] = 'CC'
-            elif data['amount'] < cls.TED_MIN_AMOUNT and cls.TED_START_TIME < timestamp.time() < cls.TED_END_TIME:
-                data['type'] = 'TED'
+            data["type"] = "DOC"
+            if data["debtor_bank"] == data["creditor_bank"]:
+                data["type"] = "CC"
+            elif (
+                data["amount"] < cls.TED_MIN_AMOUNT
+                and cls.TED_START_TIME < timestamp.time() < cls.TED_END_TIME
+            ):
+                data["type"] = "TED"
             return data
 
         @classmethod
