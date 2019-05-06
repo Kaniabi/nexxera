@@ -2,7 +2,6 @@ from flask_sqlalchemy import BaseQuery
 
 
 class ValidationError(BaseException):
-
     def __init__(self, **errors):
         super(ValidationError, self).__init__()
         self.errors = errors
@@ -28,7 +27,7 @@ def create_models(db):
 
         def __new__(cls, *args, **kwargs):
             obj = super(QueryWithSoftDelete, cls).__new__(cls)
-            obj._with_deleted = kwargs.pop('_with_deleted', False)
+            obj._with_deleted = kwargs.pop("_with_deleted", False)
             if len(args) > 0:
                 super(QueryWithSoftDelete, obj).__init__(*args, **kwargs)
                 return obj.filter_by(deleted=False) if not obj._with_deleted else obj
@@ -41,7 +40,7 @@ def create_models(db):
             return self.__class__(
                 db.class_mapper(self._mapper_zero().class_),
                 session=db.session(),
-                _with_deleted=True
+                _with_deleted=True,
             )
 
         def _get(self, *args, **kwargs):
@@ -68,7 +67,7 @@ def create_models(db):
         MAX_AMOUNT = 100000.00
 
         id = db.Column(db.Integer, primary_key=True)
-        user_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
+        user_id = db.Column(db.Integer, db.ForeignKey("users.id"), nullable=False)
         # user = db.relationship("User", backref=db.backref("transactions", lazy=True))
 
         # Creditor Account
@@ -88,19 +87,19 @@ def create_models(db):
         # TODO: Should be an enumerate of TransactionType
         type = db.Column(db.String(3))
 
-        status = db.Column(db.String(12), default='OK')
+        status = db.Column(db.String(12), default="OK")
 
         # Soft deletion
         query_class = QueryWithSoftDelete
         deleted = db.Column(db.Boolean, default=False)
 
-        @validates('amount')
+        @validates("amount")
         def validate_amount(self, _key, value):
             """
             The amount must be lower than MAX_AMOUNT.
             """
             if value > self.MAX_AMOUNT:
-                self.status = 'ERRO'
+                self.status = "ERRO"
             return value
 
         @classmethod
@@ -108,10 +107,8 @@ def create_models(db):
             """
             Adds total_amount to the GET MANY results.
             """
-            total_amount = sum(
-                [i['amount'] for i in result['objects']]
-            )
-            result['total_amount'] = total_amount
+            total_amount = sum([i["amount"] for i in result["objects"]])
+            result["total_amount"] = total_amount
             return result
 
     class Models:

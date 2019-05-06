@@ -17,15 +17,15 @@ def create_app(name, config_updates=None):
     manager.create_api(
         result.models.NixUser,
         methods=["GET", "POST", "DELETE"],
-        validation_exceptions=[ValidationError]
+        validation_exceptions=[ValidationError],
     )
     manager.create_api(
         result.models.NixTransaction,
         methods=["GET", "POST", "DELETE"],
         validation_exceptions=[ValidationError],
         postprocessors={
-            'GET_MANY': [result.models.NixTransaction.get_many_postprocessor]
-        }
+            "GET_MANY": [result.models.NixTransaction.get_many_postprocessor]
+        },
     )
 
     return result

@@ -12,7 +12,7 @@ def app():
 
     config_updates = {
         "FLASK_TEST": True,
-        "SQLALCHEMY_DATABASE_URI": "sqlite:///:memory:"
+        "SQLALCHEMY_DATABASE_URI": "sqlite:///:memory:",
     }
 
     return create_app("test_nix", config_updates)
